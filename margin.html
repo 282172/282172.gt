@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Profit Margin Calculator – Smart-rate</title>
+    <meta name="description" content="Calculate profit margin, markup, and profit amount from cost and revenue. Free, fast, and privacy-first.">
+    <link rel="canonical" href="https://www.smart-rate.com/margin.html">
+    <meta property="og:title" content="Profit Margin Calculator – Smart-rate">
+    <meta property="og:description" content="Easily calculate your profit margins and markups.">
+    <meta name="keywords" content="profit margin, markup calculator, margin calculator, business finance">
+    <!-- ADSENSE_VERIFICATION_CODE_HERE -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Margin page specific styles – inherits all colors from style.css */
+        .margin-hero {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 1rem 1rem;
+            background: linear-gradient(135deg, rgba(255,46,99,0.05), rgba(255,165,0,0.02));
+            border-radius: 2rem;
+        }
+        .margin-hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .margin-hero p {
+            color: var(--text-tertiary);
+            font-size: 0.95rem;
+        }
+        .margin-card {
+            background: var(--surface);
+            border-radius: 1.8rem;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        .input-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .input-group label span {
+            font-size: 1.1rem;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 1.2rem;
+            background: var(--bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            outline: none;
+            font-family: 'Inter', monospace;
+        }
+        .input-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255,46,99,0.2);
+        }
+        .result-area {
+            background: var(--surface-variant);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+        .result-item {
+            margin: 0.8rem 0;
+        }
+        .result-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+        }
+        .result-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 0.2rem;
+        }
+        .result-value small {
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+        .result-note {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            margin-top: 1rem;
+        }
+        @media (max-width: 640px) {
+            .margin-card { padding: 1.2rem; }
+            .result-value { font-size: 1.5rem; }
+            .margin-hero h1 { font-size: 1.7rem; }
+        }
+    </style>
+</head>
+<body>
+   
+
+    <header>
+        <div class="container header-container">
+            <div class="brand">Smart‑rate</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="currency.html">Currency</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="whatif.html">What If?</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+            <div class="kebab-menu">
+                <button class="kebab-button" id="kebabToggle" aria-label="Menu">☰</button>
+                <div class="dropdown-content" id="kebabDropdown">
+                    <a href="index.html">Home</a>
+                    <a href="currency.html">Currency</a>
+                    <a href="news.html">News</a>
+                    <a href="whatif.html">What If?</a>
+                    <a href="about.html">About</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="ad-container"><div class="ad-placeholder ad-top">Advertisement</div></div>
+
+        <div class="container" style="max-width: 800px; margin: 2rem auto;">
+            <div class="margin-hero">
+                <h1>📊 Profit Margin Calculator</h1>
+                <p>Calculate profit, margin %, and markup % from cost and revenue</p>
+            </div>
+
+            <div class="margin-card">
+                <div class="input-group">
+                    <label><span>💵</span> Cost Price ($)</label>
+                    <input type="number" id="costPrice" value="1,000" placeholder="Enter cost price" inputmode="numeric">
+                </div>
+                <div class="input-group">
+                    <label><span>🏷️</span> Selling Price / Revenue ($)</label>
+                    <input type="number" id="sellingPrice" value="1,500" placeholder="Enter selling price" inputmode="numeric">
+                </div>
+
+                <div class="result-area">
+                    <div class="result-item">
+                        <div class="result-label">Profit Amount</div>
+                        <div class="result-value" id="profitAmount">$0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Profit Margin (%)</div>
+                        <div class="result-value" id="profitMargin">0.00%</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Markup (%)</div>
+                        <div class="result-value" id="markupPercent">0.00%</div>
+                    </div>
+                    <div class="result-note">* Margin = (Revenue - Cost) / Revenue × 100%  |  Markup = (Revenue - Cost) / Cost × 100%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ad-container"><div class="ad-placeholder ad-middle">Advertisement</div></div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">Smart‑rate</div>
+            <p>&copy; 2025 Smart-rate. For informational purposes only. Not financial advice.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="contact.html">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="ad-container"><div class="ad-placeholder ad-bottom">Advertisement</div></div>
+
+    <script src="main.js"></script>
+    <script>
+        (function() {
+            // DOM elements
+            const costInput = document.getElementById('costPrice');
+            const sellingInput = document.getElementById('sellingPrice');
+            const profitAmountSpan = document.getElementById('profitAmount');
+            const profitMarginSpan = document.getElementById('profitMargin');
+            const markupPercentSpan = document.getElementById('markupPercent');
+
+            // Helper: format number with commas (thousands separator)
+            function formatNumberWithCommas(value, decimals = 2) {
+                if (value === undefined || value === null || isNaN(value)) return '0';
+                let num = parseFloat(value);
+                if (isNaN(num)) return '0';
+                let formatted = num.toLocaleString('en-US', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals,
+                    useGrouping: true
+                });
+                return formatted;
+            }
+
+            // Parse formatted string back to raw number (remove commas)
+            function parseFormattedNumber(formattedStr) {
+                if (!formattedStr) return 0;
+                let cleaned = formattedStr.replace(/,/g, '');
+                let num = parseFloat(cleaned);
+                return isNaN(num) ? 0 : num;
+            }
+
+            // Apply formatting on blur (only when user leaves the field)
+            function formatCostOnBlur() {
+                let rawValue = costInput.value;
+                let num = parseFormattedNumber(rawValue);
+                if (isNaN(num)) num = 0;
+                costInput.value = formatNumberWithCommas(num);
+            }
+            function formatSellingOnBlur() {
+                let rawValue = sellingInput.value;
+                let num = parseFormattedNumber(rawValue);
+                if (isNaN(num)) num = 0;
+                sellingInput.value = formatNumberWithCommas(num);
+            }
+            // When the field gets focus, remove formatting for easy editing
+            function clearCostFormatting() {
+                let num = parseFormattedNumber(costInput.value);
+                if (!isNaN(num)) {
+                    costInput.value = num.toString();
+                }
+            }
+            function clearSellingFormatting() {
+                let num = parseFormattedNumber(sellingInput.value);
+                if (!isNaN(num)) {
+                    sellingInput.value = num.toString();
+                }
+            }
+
+            costInput.addEventListener('blur', formatCostOnBlur);
+            costInput.addEventListener('focus', clearCostFormatting);
+            sellingInput.addEventListener('blur', formatSellingOnBlur);
+            sellingInput.addEventListener('focus', clearSellingFormatting);
+            
+            // Initial formatting
+            formatCostOnBlur();
+            formatSellingOnBlur();
+
+            // Calculate margin and markup
+            function calculateMargin() {
+                let cost = parseFormattedNumber(costInput.value);
+                let revenue = parseFormattedNumber(sellingInput.value);
+
+                if (isNaN(cost)) cost = 0;
+                if (isNaN(revenue)) revenue = 0;
+
+                let profit = revenue - cost;
+                let marginPercent = 0;
+                let markupPercent = 0;
+
+                if (revenue !== 0) {
+                    marginPercent = (profit / revenue) * 100;
+                }
+                if (cost !== 0) {
+                    markupPercent = (profit / cost) * 100;
+                }
+
+                profitAmountSpan.textContent = `$${formatNumberWithCommas(profit)}`;
+                profitMarginSpan.textContent = `${marginPercent.toFixed(2)}%`;
+                markupPercentSpan.textContent = `${markupPercent.toFixed(2)}%`;
+            }
+
+            // Event listeners: recalc on input (while typing) and on blur after formatting
+            costInput.addEventListener('input', calculateMargin);
+            sellingInput.addEventListener('input', calculateMargin);
+            costInput.addEventListener('blur', () => {
+                formatCostOnBlur();
+                calculateMargin();
+            });
+            sellingInput.addEventListener('blur', () => {
+                formatSellingOnBlur();
+                calculateMargin();
+            });
+
+            // Initial calculation
+            calculateMargin();
+        })();
+
+        // Dark mode and kebab menu (same as index.html)
+        (function() {
+            const toggle = document.getElementById('themeToggle');
+            if (toggle) {
+                const root = document.body;
+                const saved = localStorage.getItem('smartrate-theme');
+                if (saved === 'dark') root.classList.add('dark-mode');
+                toggle.addEventListener('click', () => {
+                    root.classList.toggle('dark-mode');
+                    localStorage.setItem('smartrate-theme', root.classList.contains('dark-mode') ? 'dark' : 'light');
+                });
+            }
+            const kebabBtn = document.getElementById('kebabToggle');
+            const dropdown = document.getElementById('kebabDropdown');
+            if (kebabBtn && dropdown) {
+                kebabBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('show');
+                });
+                document.addEventListener('click', (e) => {
+                    if (!kebabBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

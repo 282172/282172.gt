@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>VAT Calculator – Smart-rate</title>
+    <meta name="description" content="Calculate VAT amount and total including VAT in any currency. Instant, accurate, and easy to use.">
+    <meta name="keywords" content="VAT calculator, VAT amount, tax calculator, finance tools">
+    <link rel="canonical" href="https://www.smart-rate.com/vat.html">
+    <!-- ADSENSE_VERIFICATION_CODE_HERE -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== VAT PAGE – CONSISTENT WITH SITE STYLE ===== */
+        .vat-hero {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .vat-hero h1 {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary, #0d6efd), var(--accent, #6f42c1));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .vat-hero p {
+            color: var(--text-tertiary, #64748b);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .vat-card {
+            background: var(--surface, #ffffff);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border, #e2e8f0);
+            box-shadow: 0 10px 25px -8px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s;
+        }
+        .vat-card:hover {
+            box-shadow: 0 25px 35px -16px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            color: var(--text-tertiary, #64748b);
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--border, #e2e8f0);
+            border-radius: 1rem;
+            background: var(--bg, #ffffff);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary, #0d6efd);
+            box-shadow: 0 0 0 3px var(--primary-soft, rgba(13,110,253,0.2));
+        }
+        .btn-calc {
+            background: linear-gradient(105deg, var(--primary, #0d6efd), var(--primary-dark, #0b5ed7));
+            border: none;
+            padding: 0.9rem 1.5rem;
+            border-radius: 2.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.25s;
+            width: 100%;
+            margin-top: 0.5rem;
+            box-shadow: 0 8px 18px -8px var(--primary-glow, rgba(13,110,253,0.3));
+        }
+        .btn-calc:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 26px -8px var(--primary-glow, rgba(13,110,253,0.4));
+        }
+        .result-area {
+            background: var(--surface-variant, #f8fafc);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin-top: 2rem;
+            text-align: center;
+            border: 1px solid var(--border, #e2e8f0);
+        }
+        .result-area p {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .result-area span {
+            font-weight: 800;
+            color: var(--primary, #0d6efd);
+            font-size: 1.4rem;
+            display: inline-block;
+        }
+        @media (max-width: 640px) {
+            .vat-card {
+                padding: 1.2rem;
+            }
+            .result-area span {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <button class="theme-toggle-btn" id="themeToggle" aria-label="Switch theme">🌙</button>
+
+    <header>
+        <div class="container header-container">
+            <div class="brand">Smart‑rate</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="currency.html">Currency</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="whatif.html">What If?</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+            <div class="kebab-menu">
+                <button class="kebab-button" id="kebabToggle" aria-label="Menu">☰</button>
+                <div class="dropdown-content" id="kebabDropdown">
+                    <a href="index.html">Home</a>
+                    <a href="currency.html">Currency</a>
+                    <a href="news.html">News</a>
+                    <a href="whatif.html">What If?</a>
+                    <a href="about.html">About</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="ad-container"><div class="ad-placeholder ad-top">Advertisement</div></div>
+
+        <div class="container">
+            <div class="vat-hero">
+                <h1>🧾 VAT Calculator</h1>
+                <p>Calculate VAT amount and total including VAT – in any currency.</p>
+            </div>
+
+            <div class="vat-card">
+                <div class="form-group">
+                    <label for="vatAmount">Amount (excl. VAT)</label>
+                    <input type="text" id="vatAmount" placeholder="e.g., 1000" value="1000" inputmode="decimal">
+                </div>
+                <div class="form-group">
+                    <label for="vatRate">VAT rate (%)</label>
+                    <input type="text" id="vatRate" value="20" inputmode="decimal">
+                </div>
+                <div class="form-group">
+                    <label for="currencySelect">Currency</label>
+                    <select id="currencySelect">
+                        <option value="$" selected>USD ($)</option>
+                        <option value="€">EUR (€)</option>
+                        <option value="£">GBP (£)</option>
+                        <option value="¥">JPY (¥)</option>
+                        <option value="₹">INR (₹)</option>
+                        <option value="₦">NGN (₦)</option>
+                        <option value="A$">AUD (A$)</option>
+                        <option value="C$">CAD (C$)</option>
+                        <option value="CHF">CHF (CHF)</option>
+                        <option value="R">ZAR (R)</option>
+                        <option value="₵">GHS (₵)</option>
+                        <option value="KSh">KES (KSh)</option>
+                        <option value="₫">VND (₫)</option>
+                        <option value="₩">KRW (₩)</option>
+                        <option value="฿">THB (฿)</option>
+                        <option value="₺">TRY (₺)</option>
+                        <option value="R$">BRL (R$)</option>
+                        <option value="₱">PHP (₱)</option>
+                        <option value="kr">SEK (kr)</option>
+                        <option value="kr">NOK (kr)</option>
+                        <option value="zł">PLN (zł)</option>
+                    </select>
+                </div>
+                <button id="calcVatBtn" class="btn-calc">Calculate</button>
+
+                <div class="result-area">
+                    <p><strong>VAT amount</strong><br><span id="vatAmountResult">0.00</span></p>
+                    <p><strong>Total incl. VAT</strong><br><span id="vatTotalResult">0.00</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="ad-container"><div class="ad-placeholder ad-middle">Advertisement</div></div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">Smart‑rate</div>
+            <p>&copy; 2025 Smart-rate. For informational purposes only. Not financial advice.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a> | <a href="contact.html">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="ad-container"><div class="ad-placeholder ad-bottom">Advertisement</div></div>
+
+    <script src="main.js"></script>
+    <script>
+        // ===== VAT CALCULATOR – FULLY CORRECTED =====
+        (function() {
+            // DOM elements
+            const amountInput = document.getElementById('vatAmount');
+            const rateInput = document.getElementById('vatRate');
+            const currencySelect = document.getElementById('currencySelect');
+            const calcBtn = document.getElementById('calcVatBtn');
+            const vatResultSpan = document.getElementById('vatAmountResult');
+            const totalResultSpan = document.getElementById('vatTotalResult');
+
+            // Helper: format number with commas and 2 decimals
+            function formatNumber(num) {
+                if (isNaN(num)) return '0.00';
+                return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            // Helper: get numeric value from formatted input (strip commas)
+            function getNumericValue(inputElement) {
+                let raw = inputElement.value.replace(/,/g, '');
+                let num = parseFloat(raw);
+                return isNaN(num) ? 0 : num;
+            }
+
+            // Helper: update the result display
+            function updateResult() {
+                const amount = getNumericValue(amountInput);
+                const rate = getNumericValue(rateInput);
+                // Prevent negative values (treat as 0)
+                const safeAmount = Math.max(0, amount);
+                const safeRate = Math.max(0, rate);
+                
+                const vat = safeAmount * safeRate / 100;
+                const total = safeAmount + vat;
+                
+                const currencyText = currencySelect.options[currencySelect.selectedIndex].text;
+                const symbol = currencyText.split(' ')[0];
+                
+                vatResultSpan.innerText = symbol + formatNumber(vat);
+                totalResultSpan.innerText = symbol + formatNumber(total);
+            }
+
+            // Comma formatting on blur (does not interfere with typing)
+            function setupCommaFormatting(field) {
+                if (!field) return;
+                field.addEventListener('blur', function() {
+                    let num = getNumericValue(field);
+                    field.value = formatNumber(num);
+                });
+            }
+
+            // Also format on page load (initial values)
+            function formatInitialFields() {
+                amountInput.value = formatNumber(getNumericValue(amountInput));
+                rateInput.value = formatNumber(getNumericValue(rateInput));
+            }
+
+            // Event listeners
+            if (calcBtn) {
+                calcBtn.addEventListener('click', updateResult);
+            }
+            // Optional: also update when currency changes (real‑time)
+            if (currencySelect) {
+                currencySelect.addEventListener('change', updateResult);
+            }
+            // Format fields on blur
+            setupCommaFormatting(amountInput);
+            setupCommaFormatting(rateInput);
+            
+            // Initial setup
+            formatInitialFields();
+            updateResult(); // ensure result is correct on page load
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="keywords" content="currency converter, financial calculators, salary to hourly, VAT calculator, loan interest calculator, markup calculator, profit margin, investment simulator, crypto news, free finance tools">
+    <title>Markup Calculator – Smart-rate</title>
+    <meta name="description" content="Calculate selling price from cost and markup percentage. Easy, fast, and free.">
+    <link rel="canonical" href="https://www.smart-rate.com/markup.html">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        /* Markup page specific styles – inherits all colors from style.css */
+        .markup-hero {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 1rem 1rem;
+            background: linear-gradient(135deg, rgba(255,46,99,0.05), rgba(255,165,0,0.02));
+            border-radius: 2rem;
+        }
+        .markup-hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .markup-hero p {
+            color: var(--text-tertiary);
+            font-size: 0.95rem;
+        }
+        .markup-card {
+            background: var(--surface);
+            border-radius: 1.8rem;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        .input-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .input-group label span {
+            font-size: 1.1rem;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 1.2rem;
+            background: var(--bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            outline: none;
+            font-family: 'Inter', monospace;
+        }
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255,46,99,0.2);
+        }
+        .result-area {
+            background: var(--surface-variant);
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+        .result-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+        }
+        .result-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 0.3rem;
+            word-break: break-word;
+        }
+        .result-note {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            margin-top: 1rem;
+        }
+        @media (max-width: 640px) {
+            .markup-card { padding: 1.2rem; }
+            .result-value { font-size: 1.6rem; }
+            .markup-hero h1 { font-size: 1.7rem; }
+        }
+    </style>
+</head>
+<body>
+    
+
+    <header>
+        <div class="container header-container">
+            <div class="brand">Smart‑rate</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="currency.html">Currency</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+            <div class="kebab-menu">
+                <button class="kebab-button" id="kebabToggle" aria-label="Menu">☰</button>
+                <div class="dropdown-content" id="kebabDropdown">
+                    <a href="index.html">Home</a>
+                    <a href="news.html">News</a>
+                    <a href="about.html">About</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="ad-container"><div class="ad-placeholder ad-top">Advertisement</div></div>
+
+        <div class="container" style="max-width: 800px; margin: 2rem auto;">
+            <div class="markup-hero">
+                <h1>📈 Markup Calculator</h1>
+                <p>Calculate selling price from cost and markup percentage</p>
+            </div>
+
+            <div class="markup-card">
+                <div class="input-group">
+                    <label><span>💰</span> Cost ($)</label>
+                    <input type="text" id="markupCost" value="1,000.00" placeholder="Enter cost" inputmode="numeric">
+                </div>
+                <div class="input-group">
+                    <label><span>📊</span> Markup (%)</label>
+                    <input type="text" id="markupPercent" value="30.00" placeholder="Enter markup percentage" inputmode="numeric">
+                </div>
+                <div class="input-group">
+                    <label><span>💱</span> Currency</label>
+                    <select id="currencySelectMarkup">
+                        <option value="$" selected>USD ($)</option>
+                        <option value="€">EUR (€)</option>
+                        <option value="£">GBP (£)</option>
+                        <option value="¥">JPY (¥)</option>
+                        <option value="₹">INR (₹)</option>
+                        <option value="₦">NGN (₦)</option>
+                        <option value="A$">AUD (A$)</option>
+                        <option value="C$">CAD (C$)</option>
+                        <option value="CHF">CHF (CHF)</option>
+                        <option value="R">ZAR (R)</option>
+                        <option value="₵">GHS (₵)</option>
+                        <option value="KSh">KES (KSh)</option>
+                        <option value="₫">VND (₫)</option>
+                        <option value="₩">KRW (₩)</option>
+                        
+                    </select>
+                </div>
+
+                <div class="result-area">
+                    <div class="result-label">Selling Price</div>
+                    <div class="result-value" id="sellingPrice">$0.00</div>
+                    <div class="result-note">* Selling price = Cost × (1 + Markup/100)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ad-container"><div class="ad-placeholder ad-middle">Advertisement</div></div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">Smart‑rate</div>
+            <p>&copy; 2025 Smart-rate. For informational purposes only. Not financial advice.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="contact.html">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="ad-container"><div class="ad-placeholder ad-bottom">Advertisement</div></div>
+
+    <script src="main.js"></script>
+    <script>
+        (function() {
+            // DOM elements
+            const costInput = document.getElementById('markupCost');
+            const markupInput = document.getElementById('markupPercent');
+            const currencySelect = document.getElementById('currencySelectMarkup');
+            const sellingPriceSpan = document.getElementById('sellingPrice');
+
+            // Helper: format number with commas (thousands separator)
+            function formatNumberWithCommas(value, decimals = 2) {
+                if (value === undefined || value === null || isNaN(value)) return '0.00';
+                let num = parseFloat(value);
+                if (isNaN(num)) return '0.00';
+                let formatted = num.toLocaleString('en-US', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals,
+                    useGrouping: true
+                });
+                return formatted;
+            }
+
+            // Parse formatted string back to raw number (remove commas)
+            function parseFormattedNumber(formattedStr) {
+                if (!formattedStr) return 0;
+                let cleaned = formattedStr.replace(/,/g, '');
+                let num = parseFloat(cleaned);
+                return isNaN(num) ? 0 : num;
+            }
+
+            // Formatting on blur and focus for cost input
+            function formatCostOnBlur() {
+                let rawValue = costInput.value;
+                let num = parseFormattedNumber(rawValue);
+                if (isNaN(num)) num = 0;
+                costInput.value = formatNumberWithCommas(num);
+            }
+            function clearCostFormatting() {
+                let num = parseFormattedNumber(costInput.value);
+                if (!isNaN(num)) {
+                    costInput.value = num.toString();
+                }
+            }
+
+            // Formatting on blur and focus for markup input (percentage, keep up to 2 decimals)
+            function formatMarkupOnBlur() {
+                let rawValue = markupInput.value;
+                let num = parseFormattedNumber(rawValue);
+                if (isNaN(num)) num = 0;
+                markupInput.value = formatNumberWithCommas(num);
+            }
+            function clearMarkupFormatting() {
+                let num = parseFormattedNumber(markupInput.value);
+                if (!isNaN(num)) {
+                    markupInput.value = num.toString();
+                }
+            }
+
+            costInput.addEventListener('blur', formatCostOnBlur);
+            costInput.addEventListener('focus', clearCostFormatting);
+            markupInput.addEventListener('blur', formatMarkupOnBlur);
+            markupInput.addEventListener('focus', clearMarkupFormatting);
+
+            // Initial formatting
+            formatCostOnBlur();
+            formatMarkupOnBlur();
+
+            // Function to update selling price (real-time)
+            function updateSellingPrice() {
+                let cost = parseFormattedNumber(costInput.value);
+                let markup = parseFormattedNumber(markupInput.value);
+                if (isNaN(cost)) cost = 0;
+                if (isNaN(markup)) markup = 0;
+                
+                let selling = cost * (1 + markup / 100);
+                const symbol = currencySelect.options[currencySelect.selectedIndex].value;
+                sellingPriceSpan.textContent = `${symbol}${formatNumberWithCommas(selling)}`;
+            }
+
+            // Event listeners: input while typing, change on select, and after formatting
+            costInput.addEventListener('input', updateSellingPrice);
+            markupInput.addEventListener('input', updateSellingPrice);
+            currencySelect.addEventListener('change', updateSellingPrice);
+            costInput.addEventListener('blur', () => {
+                formatCostOnBlur();
+                updateSellingPrice();
+            });
+            markupInput.addEventListener('blur', () => {
+                formatMarkupOnBlur();
+                updateSellingPrice();
+            });
+
+            // Initial calculation
+            updateSellingPrice();
+        })();
+
+        // Dark mode and kebab menu (same as index.html)
+        (function() {
+            const toggle = document.getElementById('themeToggle');
+            if (toggle) {
+                const root = document.body;
+                const saved = localStorage.getItem('smartrate-theme');
+                if (saved === 'dark') root.classList.add('dark-mode');
+                toggle.addEventListener('click', () => {
+                    root.classList.toggle('dark-mode');
+                    localStorage.setItem('smartrate-theme', root.classList.contains('dark-mode') ? 'dark' : 'light');
+                });
+            }
+            const kebabBtn = document.getElementById('kebabToggle');
+            const dropdown = document.getElementById('kebabDropdown');
+            if (kebabBtn && dropdown) {
+                kebabBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('show');
+                });
+                document.addEventListener('click', (e) => {
+                    if (!kebabBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

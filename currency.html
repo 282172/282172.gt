@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Currency Converter – Smart-rate</title>
+    <meta name="description" content="Free currency converter using multiple APIs. Live rates, 10‑minute cache, fallback support, and status indicator.">
+    <link rel="canonical" href="https://www.smart-rate.com/currency.html">
+    <meta property="og:title" content="Currency Converter – Smart-rate">
+    <meta property="og:description" content="Live exchange rates with caching and fallback. Reliable and private.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== CSS VARIABLES FOR GRADIENT COLORS ===== */
+      
+
+        /* ===== GLOBAL DESIGN – CLEAN, PROFESSIONAL, MODERN ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+
+            
+        }
+
+    
+
+        .btn-secondary {
+            background: transparent;
+            border-color: #cfdfed;
+            color: #1e293b;
+        }
+
+        .btn-secondary:hover {
+            border-color: #2c7be5;
+            color: #2c7be5;
+            background: rgba(44, 123, 229, 0.06);
+        }
+
+        .status-idle { background: #e9ecef; color: #2c3e50; }
+        .status-cached { background: #fff3e0; color: #b45f06; }
+        .status-offline { background: #ffe6e5; color: #b91c1c; }
+        .help-text {
+            background: #f2f5fa;
+            color: #1e293b;
+        }
+        .help-text code {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .currency-page {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .text-primary {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .text-primary h1 {
+            font-size: 2.7rem;
+            font-weight: 800;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: black;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        .currency-header p {
+            color:linear-gradient(135deg, var(--primary), var(--primary-dark)) ;
+            font-size: 1rem;
+            font-weight: 450;
+        }
+        .converter-card {
+            border-radius: 2rem;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.12);
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .converter-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 30px 45px -15px rgba(0, 0, 0, 0.15);
+        }
+        .form-group {
+            margin-bottom: 1.6rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 0.6rem;
+            color: #4a5b7a;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            border: 2px solid #e9eef3;
+            border-radius: 1.3rem;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            outline: none;
+            font-family: 'Inter', monospace;
+        }
+        .double-group {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .double-group .form-group {
+            flex: 1;
+        }
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0 0.8rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            padding: 0.85rem 1.6rem;
+            border-radius: 2.8rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            box-shadow: 0 4px 8px rgba(0, 100, 230, 0.2);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            
+            box-shadow: 0 12px 22px -8px rgba(30, 102, 245, 0.4);
+        }
+        .btn-secondary {
+            border: 2px solid #cfdfed;
+            padding: 0.85rem 1.6rem;
+            border-radius: 2.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+        }
+        .result-area {
+            border-radius: 1.5rem;
+            padding: 1.4rem;
+            margin-top: 1.8rem;
+            text-align: center;
+            border: 1px solid #eef2ff;
+        }
+        .result-area p {
+            margin: 0.3rem 0;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.9rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .info-message {
+            font-size: 0.75rem;
+            color: #5f7f9e;
+        }
+       
+        @media (max-width: 640px) {
+            .currency-header h1 { font-size: 2rem; }
+            .converter-card { padding: 1.5rem; }
+            .button-group { flex-direction: column; gap: 0.6rem; }
+            .double-group { flex-direction: column; gap: 0.8rem; }
+        }
+
+        .ad-placeholder {
+            background: #f1f5f9;
+            text-align: center;
+            padding: 0.8rem;
+            margin: 1rem auto;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            color: #5c6f87;
+            max-width: 90%;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px dashed #cbd5e1;
+        }
+        .ad-top, .ad-middle, .ad-bottom {
+            max-width: 800px;
+        }
+        footer {
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="brand">Smart-rate</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="currency.html">Currency</a></li>
+                    <li><a href="about.html">About</a></li>
+                
+                </ul>
+            </nav>
+            <div class="kebab-menu">
+                <button class="kebab-button" aria-label="Menu" id="kebabToggle">&#8942;</button>
+                <div class="dropdown-content" id="kebabDropdown">
+                    <a href="index.html">Home</a>
+                    <a href="news.html">News</a>
+
+                    <a href="about.html">About</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="ad-placeholder ad-top">📢 Advertisement (AD_UNIT_TOP)</div>
+
+        <div class="container currency-page">
+            <div class="text-primary">
+                <h1>💱 Currency Converter</h1>
+                <p>Live rates • 10‑minute cache • Fallback APIs • Status indicator</p>
+            </div>
+
+            <div class="converter-card">
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="text" id="amount" value="1000.00" placeholder="Enter amount" inputmode="decimal">
+                </div>
+
+                <div class="double-group">
+                    <div class="form-group">
+                        <label for="fromCurrency">From</label>
+                        <select id="fromCurrency">
+                            <option value="USD" selected>USD – US Dollar</option>
+                            <option value="EUR">EUR – Euro</option>
+                            <option value="GBP">GBP – British Pound</option>
+                            <option value="JPY">JPY – Japanese Yen</option>
+                            <option value="CAD">CAD – Canadian Dollar</option>
+                            <option value="AUD">AUD – Australian Dollar</option>
+                            <option value="CHF">CHF – Swiss Franc</option>
+                            <option value="CNY">CNY – Chinese Yuan</option>
+                            <option value="INR">INR – Indian Rupee</option>
+                            <option value="NGN">NGN – Nigerian Naira</option>
+                            <option value="BRL">BRL – Brazilian Real</option>
+                            <option value="ZAR">ZAR – South African Rand</option>
+                            <option value="RUB">RUB – Russian Ruble</option>    
+                            <option value="MXN">MXN – Mexican Peso</option>
+                            <option value="KRW">KRW – South Korean Won</option>
+                            <option value="TRY">TRY – Turkish Lira</option>
+                            <option value="SEK">SEK – Swedish Krona</option>
+                            <option value="NOK">NOK – Norwegian Krone</option>
+                            <option value="DKK">DKK – Danish Krone</option>
+                            <option value="PLN">PLN – Polish Zloty</option>
+                            <option value="TWD">TWD – New Taiwan Dollar</option>
+                            <option value="HKD">HKD – Hong Kong Dollar</option>
+                            <option value="SAR">SAR – Saudi Riyal</option>
+                            <option value="AED">AED – UAE Dirham</option>
+                            <option value="QAR">QAR – Qatari Riyal</option>
+                            <option value="KWD">KWD – Kuwaiti Dinar</option>
+                            <option value="OMR">OMR – Omani Rial</option>
+                            <option value="BHD">BHD – Bahraini Dinar</option>
+                            <option value="EGP">EGP – Egyptian Pound</option>
+                            <option value="LKR">LKR – Sri Lankan Rupee</option>
+                            <option value="VND">VND – Vietnamese Dong</option>
+                            <option value="THB">THB – Thai Baht</option>
+                            <option value="MYR">MYR – Malaysian Ringgit</option>
+                            <option value="IDR">IDR – Indonesian Rupiah</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="toCurrency">To</label>
+                        <select id="toCurrency">
+                            <option value="USD">USD – US Dollar</option>
+                            <option value="EUR" selected>EUR – Euro</option>
+                            <option value="GBP">GBP – British Pound</option>
+                            <option value="JPY">JPY – Japanese Yen</option>
+                            <option value="CAD">CAD – Canadian Dollar</option>
+                            <option value="AUD">AUD – Australian Dollar</option>
+                            <option value="CHF">CHF – Swiss Franc</option>
+                            <option value="CNY">CNY – Chinese Yuan</option>
+                            <option value="INR">INR – Indian Rupee</option>
+                            <option value="NGN">NGN – Nigerian Naira</option>
+                            <option value="BRL">BRL – Brazilian Real</option>
+                            <option value="ZAR">ZAR – South African Rand</option>
+                            <option value="RUB">RUB – Russian Ruble</option>    
+                            <option value="MXN">MXN – Mexican Peso</option>
+                            <option value="KRW">KRW – South Korean Won</option>
+                            <option value="TRY">TRY – Turkish Lira</option>
+                            <option value="SEK">SEK – Swedish Krona</option>
+                            <option value="NOK">NOK – Norwegian Krone</option>
+                            <option value="DKK">DKK – Danish Krone</option>
+                            <option value="PLN">PLN – Polish Zloty</option>
+                            <option value="TWD">TWD – New Taiwan Dollar</option>
+                            <option value="HKD">HKD – Hong Kong Dollar</option>
+                            <option value="SAR">SAR – Saudi Riyal</option>
+                            <option value="AED">AED – UAE Dirham</option>
+                            <option value="QAR">QAR – Qatari Riyal</option>
+                            <option value="KWD">KWD – Kuwaiti Dinar</option>
+                            <option value="OMR">OMR – Omani Rial</option>
+                            <option value="BHD">BHD – Bahraini Dinar</option>
+                            <option value="EGP">EGP – Egyptian Pound</option>
+                            <option value="LKR">LKR – Sri Lankan Rupee</option>
+                            <option value="VND">VND – Vietnamese Dong</option>
+                            <option value="THB">THB – Thai Baht</option>
+                            <option value="MYR">MYR – Malaysian Ringgit</option>
+                            <option value="IDR">IDR – Indonesian Rupiah</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="convertBtn" class="btn-primary">Convert</button>
+                    <button id="retryBtn" class="btn-secondary">Retry</button>
+                </div>
+
+                <div class="result-area">
+                    <p><strong>Result:</strong> <span id="conversionResult">—</span></p>
+                    <p><strong>Status:</strong> <span id="apiStatus" class="status-badge status-idle">Idle</span></p>
+                    <p id="cacheMessage" class="info-message" style="font-size:0.8rem; margin-top:0.5rem;"></p>
+                </div>
+            </div>
+
+           
+        </div>
+
+        <div class="ad-placeholder ad-middle">📊 Advertisement (AD_UNIT_MIDDLE)</div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2025 Smart-rate. For informational purposes only. Not financial advice.</p>
+            <p class="footer-links">
+                <a href="/privacy.html">Privacy Policy</a> | 
+                <a href="/contact.html">Contact Us</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script src="currency.js"></script>
+    
+    <script>
+        (function() {
+            // DOM elements
+            const amountInput = document.getElementById('amount');
+            const fromSelect = document.getElementById('fromCurrency');
+            const toSelect = document.getElementById('toCurrency');
+            const convertBtn = document.getElementById('convertBtn');
+            const retryBtn = document.getElementById('retryBtn');
+            const conversionResultSpan = document.getElementById('conversionResult');
+            const apiStatusSpan = document.getElementById('apiStatus');
+            const cacheMessageSpan = document.getElementById('cacheMessage');
+
+            // Helper: format number with commas (thousands separator)
+            function formatNumberWithCommas(value) {
+                if (value === undefined || value === null || isNaN(value)) return '0.00';
+                let num = parseFloat(value);
+                if (isNaN(num)) return '0.00';
+                return num.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 6,
+                    useGrouping: true
+                });
+            }
+
+            // Parse formatted string back to raw number (remove commas)
+            function parseFormattedNumber(formattedStr) {
+                if (!formattedStr) return 0;
+                let cleaned = formattedStr.replace(/,/g, '');
+                let num = parseFloat(cleaned);
+                return isNaN(num) ? 0 : num;
+            }
+
+            // Apply formatting on blur (only when user leaves the field)
+            function formatAmountOnBlur() {
+                let rawValue = amountInput.value;
+                let num = parseFormattedNumber(rawValue);
+                if (isNaN(num)) num = 0;
+                amountInput.value = formatNumberWithCommas(num);
+            }
+
+            // When the field gets focus, remove formatting for easy editing
+            function clearFormattingOnFocus() {
+                let num = parseFormattedNumber(amountInput.value);
+                if (!isNaN(num)) {
+                    amountInput.value = num.toString();
+                }
+            }
+
+            amountInput.addEventListener('blur', formatAmountOnBlur);
+            amountInput.addEventListener('focus', clearFormattingOnFocus);
+            
+            // Initial format
+            formatAmountOnBlur();
+
+            // --- API & caching logic ---
+            const CACHE_KEY = 'smartrate_currency_cache';
+            const CACHE_TTL = 10 * 60 * 1000;
+
+            let currentRate = null;
+            let lastFromCurrency = null;
+            let lastToCurrency = null;
+
+            function setStatus(statusType, message) {
+                let className = 'status-idle';
+                if (statusType === 'cached') className = 'status-cached';
+                else if (statusType === 'offline') className = 'status-offline';
+                else className = 'status-idle';
+                apiStatusSpan.className = `status-badge ${className}`;
+                apiStatusSpan.textContent = message;
+            }
+
+            function setCacheMessage(msg) {
+                cacheMessageSpan.textContent = msg;
+            }
+
+            async function fetchRateWithFallback(from, to, retries = 2) {
+                const endpoints = [
+                    `https://api.exchangerate.host/convert?from=${from}&to=${to}`,
+                    `https://api.frankfurter.app/latest?from=${from}&to=${to}`,
+                    `https://open.er-api.com/v6/latest/${from}`
+                ];
+                
+                for (let attempt = 0; attempt <= retries; attempt++) {
+                    for (let epIdx = 0; epIdx < endpoints.length; epIdx++) {
+                        try {
+                            const url = endpoints[epIdx];
+                            const controller = new AbortController();
+                            const timeoutId = setTimeout(() => controller.abort(), 7000);
+                            const res = await fetch(url, { signal: controller.signal });
+                            clearTimeout(timeoutId);
+                            if (!res.ok) continue;
+                            const data = await res.json();
+                            let rate = null;
+                            if (url.includes('exchangerate.host') && data.result) {
+                                rate = data.result;
+                            } else if (url.includes('frankfurter.app') && data.rates && data.rates[to]) {
+                                rate = data.rates[to];
+                            } else if (url.includes('open.er-api.com') && data.rates && data.rates[to]) {
+                                rate = data.rates[to];
+                            }
+                            if (rate && typeof rate === 'number' && rate > 0) {
+                                return { rate, source: endpoints[epIdx] };
+                            }
+                        } catch (err) {
+                            console.warn(`API attempt failed: ${err.message}`);
+                        }
+                    }
+                    if (attempt < retries) {
+                        await new Promise(r => setTimeout(r, 800 * (attempt + 1)));
+                    }
+                }
+                throw new Error('All API endpoints failed');
+            }
+
+            function loadFromCache(from, to) {
+                try {
+                    const cachedRaw = localStorage.getItem(CACHE_KEY);
+                    if (!cachedRaw) return null;
+                    const cached = JSON.parse(cachedRaw);
+                    if (cached.from === from && cached.to === to && (Date.now() - cached.timestamp) < CACHE_TTL) {
+                        return { rate: cached.rate, timestamp: cached.timestamp };
+                    } else if (cached.from === from && cached.to === to && (Date.now() - cached.timestamp) >= CACHE_TTL) {
+                        return { rate: cached.rate, timestamp: cached.timestamp, expired: true };
+                    }
+                    return null;
+                } catch(e) { return null; }
+            }
+
+            function saveToCache(from, to, rate) {
+                const cacheObj = { from, to, rate, timestamp: Date.now() };
+                localStorage.setItem(CACHE_KEY, JSON.stringify(cacheObj));
+            }
+
+            function updateDisplay(rate, fromCurr, toCurr, sourceType, cacheTimestamp = null) {
+                currentRate = rate;
+                lastFromCurrency = fromCurr;
+                lastToCurrency = toCurr;
+                let rawAmount = parseFormattedNumber(amountInput.value);
+                if (isNaN(rawAmount)) rawAmount = 0;
+                const converted = rawAmount * rate;
+                const formattedAmount = formatNumberWithCommas(rawAmount);
+                const formattedConverted = formatNumberWithCommas(converted);
+                conversionResultSpan.innerHTML = `${formattedAmount} ${fromCurr} = <strong>${formattedConverted}</strong> ${toCurr}`;
+                
+                if (sourceType === 'cached') {
+                    if (cacheTimestamp && (Date.now() - cacheTimestamp) > CACHE_TTL) {
+                        setStatus('cached', '⚠️ Stale cache (rate expired)');
+                        setCacheMessage(`Using cached rate from ${new Date(cacheTimestamp).toLocaleTimeString()}. Rates may be outdated. Click Retry.`);
+                    } else {
+                        setStatus('cached', '📦 Cached (10min)');
+                        setCacheMessage(`Latest rate from cache (updated ${new Date(cacheTimestamp).toLocaleTimeString()})`);
+                    }
+                } else {
+                    setStatus('idle', '✅ Live rate');
+                    setCacheMessage(`Rate fetched from API — updated just now`);
+                }
+            }
+
+            async function performConversion(forceRefresh = false) {
+                const from = fromSelect.value;
+                const to = toSelect.value;
+                let rawAmount = parseFormattedNumber(amountInput.value);
+                if (isNaN(rawAmount) || rawAmount === 0) {
+                    rawAmount = 1;
+                    amountInput.value = formatNumberWithCommas(1);
+                } else {
+                    amountInput.value = formatNumberWithCommas(rawAmount);
+                }
+                
+                if (from === to) {
+                    const formattedAmount = formatNumberWithCommas(rawAmount);
+                    conversionResultSpan.innerHTML = `${formattedAmount} ${from} = ${formattedAmount} ${to}`;
+                    setStatus('idle', 'Same currency');
+                    setCacheMessage('No conversion needed.');
+                    currentRate = 1;
+                    return;
+                }
+
+                if (!forceRefresh) {
+                    const cached = loadFromCache(from, to);
+                    if (cached && cached.rate) {
+                        const isExpired = cached.expired || (Date.now() - cached.timestamp) >= CACHE_TTL;
+                        if (!isExpired) {
+                            updateDisplay(cached.rate, from, to, 'cached', cached.timestamp);
+                            return;
+                        } else if (cached.rate && isExpired) {
+                            updateDisplay(cached.rate, from, to, 'cached', cached.timestamp);
+                            fetchRateWithFallback(from, to, 2).then(({ rate }) => {
+                                if (rate && rate > 0) {
+                                    saveToCache(from, to, rate);
+                                    if (fromSelect.value === from && toSelect.value === to) {
+                                        updateDisplay(rate, from, to, 'live');
+                                    }
+                                }
+                            }).catch(e => console.warn('background refresh failed'));
+                            return;
+                        }
+                    }
+                }
+                
+                setStatus('idle', '🔄 Fetching live rate...');
+                conversionResultSpan.innerHTML = '⟳ Updating...';
+                try {
+                    const { rate } = await fetchRateWithFallback(from, to, 2);
+                    if (rate && rate > 0) {
+                        saveToCache(from, to, rate);
+                        updateDisplay(rate, from, to, 'live');
+                    } else {
+                        throw new Error('Invalid rate');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    const anyCache = localStorage.getItem(CACHE_KEY);
+                    let staleFallback = null;
+                    if (anyCache) {
+                        try {
+                            const parsed = JSON.parse(anyCache);
+                            if (parsed.rate && parsed.from === from && parsed.to === to) {
+                                staleFallback = parsed;
+                            }
+                        } catch(e) {}
+                    }
+                    if (staleFallback) {
+                        updateDisplay(staleFallback.rate, from, to, 'cached', staleFallback.timestamp);
+                        setStatus('offline', '📡 Offline mode (stale data)');
+                        setCacheMessage(`Live rates unavailable. Showing last known rate from ${new Date(staleFallback.timestamp).toLocaleString()}`);
+                    } else {
+                        conversionResultSpan.innerHTML = '⚠️ Conversion unavailable. No cache & APIs unreachable.';
+                        setStatus('offline', '❌ Offline');
+                        setCacheMessage('Check your connection or retry later.');
+                    }
+                }
+            }
+
+            function retryConversion() {
+                performConversion(true);
+            }
+
+            convertBtn.addEventListener('click', () => performConversion(false));
+            retryBtn.addEventListener('click', retryConversion);
+            fromSelect.addEventListener('change', () => performConversion(false));
+            toSelect.addEventListener('change', () => performConversion(false));
+            
+            performConversion(false);
+        })();
+    </script>
+    
+    <div class="ad-placeholder ad-bottom">📈 Advertisement (AD_UNIT_BOTTOM)</div>
+</body>
+</html>
